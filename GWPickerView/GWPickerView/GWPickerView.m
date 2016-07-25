@@ -90,6 +90,9 @@
     [_backView addSubview:cancelBtn];
 }
 
+/**
+ *  出现，消失的事件
+ */
 - (void)show
 {
     _window = [UIApplication sharedApplication].keyWindow;
@@ -108,7 +111,6 @@
 }
 
 #pragma mark -- GWPickerViewDelegate
-
 - (void)sureBtnAction:(UIButton *)sender
 {
     [self dissmiss];

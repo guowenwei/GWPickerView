@@ -21,9 +21,7 @@
 GWPickerViewDelegate> delegate;
 
 - (instancetype)initWithData:(NSArray *)data title:(NSString *)title;
-
 - (void)show;
-
 - (void)dissmiss;
 
 @end
