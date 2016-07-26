@@ -24,9 +24,19 @@
 
 @interface GWPickerView ()<UIPickerViewDelegate,UIPickerViewDataSource>
 {
-    NSArray * _temData;
-    NSString * _tempTitle;
-    UIView * _backView;
+    NSArray * _temData;//如果GWPickerViewType＝＝simple就传
+    NSString * _tempTitle;//选择器的标题
+    UIView * _backView;//底部视图
+    NSInteger _tempType;
+    /**
+     *  TypeAddress
+     */
+    NSMutableArray * _cityArr;
+    NSMutableArray * _provinceArr;
+    NSMutableArray * _districtArr;
+    NSInteger _provinceIndex;//选中了那个省
+    NSInteger _cityIndex;//选中了哪个城市的city索引
+    NSInteger _districtIndex;//选中了那个区
 }
 @property (nonatomic,strong) UIPickerView * pView;
 @property (nonatomic,strong) UIWindow * window;
@@ -35,13 +45,19 @@
 
 @implementation GWPickerView
 
-- (instancetype)initWithData:(NSArray *)data title:(NSString *)title
+- (instancetype)initWithData:(NSArray *)data title:(NSString *)title type:(GWPickerViewType)type;
 {
     if (self == [super initWithFrame:[UIScreen mainScreen].bounds]) {
         self.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight);
-        _temData = data;
         _tempTitle = title;
+        _tempType = type;
         [self addView];
+        if (type == 0) {
+            _temData = data;
+        }else if (type == 1)
+        {
+            [self addData];
+        }
     }
     return self;
 }
@@ -90,6 +106,27 @@
     [_backView addSubview:cancelBtn];
 }
 
+- (void)addData
+{
+    _provinceArr = [NSMutableArray new];
+    _cityArr = [NSMutableArray new];
+    _districtArr = [NSMutableArray new];
+    _temData = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Address" ofType:@"plist"]];
+    for (NSDictionary * dict in _temData) {
+        [_provinceArr addObject:[dict.allKeys firstObject]];
+    }
+    for (NSDictionary * dict in _temData) {
+        if ([dict objectForKey:_provinceArr[_provinceIndex]]) {
+            _cityArr = [NSMutableArray arrayWithArray:[[dict objectForKey:_provinceArr[_provinceIndex]] allKeys]];
+            [self.pView reloadComponent:1];
+            [self.pView selectRow:0 inComponent:1 animated:YES];
+            _districtArr = [NSMutableArray arrayWithArray:[[dict objectForKey:_provinceArr[_provinceIndex]] objectForKey:_cityArr[0]]];
+            [self.pView reloadComponent:2];
+            [self.pView selectRow:0 inComponent:2 animated:YES];
+        }
+    }
+}
+
 /**
  *  出现，消失的事件
  */
@@ -117,8 +154,14 @@
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(pickViewSureBtnSelectData:)])
     {
-        NSInteger num = [self.pView selectedRowInComponent:0];
-        [self.delegate pickViewSureBtnSelectData:_temData[num]];
+        NSString * str;
+        if (_tempType == 0) {
+            NSInteger num = [self.pView selectedRowInComponent:0];
+            str = _temData[num];
+        }else if (_tempType == 1){
+            str = [NSString stringWithFormat:@"%@,%@,%@",_provinceArr[_provinceIndex],_cityArr[_cityIndex],_districtArr[_districtIndex]];
+        }
+        [self.delegate pickViewSureBtnSelectData:str];
     }
 }
 
@@ -130,17 +173,91 @@
 #pragma mark -- UIPickerViewDelegate
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-    return 1;
+    if (_tempType == 0) {
+        return 1;
+    }else if (_tempType == 1)
+    {
+        return 3;
+    }
+    return 0;
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return _temData.count;
+    if (_tempType == 0) {
+        return _temData.count;
+    }else if (_tempType == 1){
+        if (component == 0) {
+            return _provinceArr.count;
+        }else if (component == 1){
+            return _cityArr.count;
+        }else if (component == 2){
+            return _districtArr.count;
+        }
+    }
+    return 0;
+}
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+{
+    UILabel* pickerLabel = [UILabel new];
+    pickerLabel.numberOfLines = 0;
+    pickerLabel.textAlignment = NSTextAlignmentCenter;
+    [pickerLabel setFont:[UIFont boldSystemFontOfSize:12]];
+    pickerLabel.text=[self pickerView:pickerView titleForRow:row forComponent:component];
+    return pickerLabel;
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    return _temData[row];
+    if (_tempType == 0) {
+        return _temData[row];
+    }else if (_tempType == 1){
+        if (component == 0) {
+            return _provinceArr[row];
+        }else if (component == 1){
+            return _cityArr[row];
+        }else if (component == 2){
+            return _districtArr[row];
+        }
+    }
+    return nil;
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    if (_tempType == 1) {
+        if (component == 0) {
+            _provinceIndex = row;
+            _cityIndex = 0;
+            _districtIndex = 0;
+            for (NSDictionary * dict in _temData) {
+                if ([dict objectForKey:_provinceArr[_provinceIndex]]) {
+                    _cityArr  = [NSMutableArray arrayWithArray:[[dict objectForKey:_provinceArr[_provinceIndex]]allKeys]];
+                    [self.pView reloadComponent:1];
+                    [self.pView selectRow:0 inComponent:1 animated:YES];
+                    
+                    _districtArr = [NSMutableArray arrayWithArray:[[dict objectForKey:_provinceArr[_provinceIndex]] objectForKey:_cityArr[0]]];
+                    [_pView reloadComponent:2];
+                    [_pView selectRow:0 inComponent:2 animated:YES];
+                }
+            }
+        }
+        if (component == 1) {
+            _cityIndex = row;
+            _districtIndex = 0;
+            for (NSDictionary * dict in _temData) {
+                if ([dict objectForKey:_provinceArr[_provinceIndex]]) {
+                    _districtArr = [[dict objectForKey:_provinceArr[_provinceIndex]] objectForKey:_cityArr[_cityIndex]];
+                    [_pView reloadComponent:2];
+                    [_pView selectRow:0 inComponent:2 animated:YES];
+                }
+            }
+        }
+        if (component == 2) {
+            _districtIndex = row;
+        }
+    }
 }
 
 - (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component

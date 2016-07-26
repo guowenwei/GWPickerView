@@ -14,6 +14,7 @@
 		409ADA751D460CB8006B361E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 409ADA741D460CB8006B361E /* Assets.xcassets */; };
 		409ADA781D460CB8006B361E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 409ADA761D460CB8006B361E /* LaunchScreen.storyboard */; };
 		409ADA821D460CDA006B361E /* GWPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 409ADA811D460CDA006B361E /* GWPickerView.m */; };
+		40AD14E91D46FE3600851FF9 /* Address.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40AD14E81D46FE3600851FF9 /* Address.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		409ADA791D460CB8006B361E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		409ADA801D460CDA006B361E /* GWPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GWPickerView.h; sourceTree = "<group>"; };
 		409ADA811D460CDA006B361E /* GWPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GWPickerView.m; sourceTree = "<group>"; };
+		40AD14E81D46FE3600851FF9 /* Address.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Address.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 		409ADA7F1D460CDA006B361E /* GWPickerView */ = {
 			isa = PBXGroup;
 			children = (
+				40AD14E81D46FE3600851FF9 /* Address.plist */,
 				409ADA801D460CDA006B361E /* GWPickerView.h */,
 				409ADA811D460CDA006B361E /* GWPickerView.m */,
 			);
@@ -150,6 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				409ADA781D460CB8006B361E /* LaunchScreen.storyboard in Resources */,
+				40AD14E91D46FE3600851FF9 /* Address.plist in Resources */,
 				409ADA751D460CB8006B361E /* Assets.xcassets in Resources */,
 				409ADA731D460CB8006B361E /* Main.storyboard in Resources */,
 			);
@@ -314,6 +318,7 @@
 				409ADA7E1D460CB8006B361E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
