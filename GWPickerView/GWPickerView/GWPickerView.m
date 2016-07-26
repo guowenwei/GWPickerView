@@ -21,6 +21,16 @@
  *  pickview的颜色
  */
 #define kPickViewColor [UIColor blackColor]
+/**
+ *  UIDatePickerModeDate类型模式：视觉上可见格式
+ *  UIDatePickerModeDateAndTime
+ */
+#define kDatePickerMode UIDatePickerModeDate
+/**
+ *  DateFormat:输出格式
+ *  "YYYY-MM-dd HH:mm:ss"
+ */
+#define kDateFormat @"YYYY-MM-dd"
 
 @interface GWPickerView ()<UIPickerViewDelegate,UIPickerViewDataSource>
 {
@@ -38,7 +48,14 @@
     NSInteger _cityIndex;//选中了哪个城市的city索引
     NSInteger _districtIndex;//选中了那个区
 }
+/**
+ *  一般或者地址选择器
+ */
 @property (nonatomic,strong) UIPickerView * pView;
+/**
+ *  时间选择器
+ */
+@property (nonatomic,strong) UIDatePicker * dataView;
 @property (nonatomic,strong) UIWindow * window;
 
 @end
@@ -85,11 +102,22 @@
     [_backView addSubview:titleLbl];
     
     //pickerView
-    self.pView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, kViewHeight / 5, kViewWidth, kViewHeight/5 * 3)];
-    self.pView.backgroundColor = [UIColor whiteColor];
-    self.pView.delegate = self;
-    self.pView.dataSource = self;
-    [_backView addSubview:self.pView];
+    if (_tempType == 1 || _tempType == 0) {
+        self.pView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, kViewHeight / 5, kViewWidth, kViewHeight/5 * 3)];
+        self.pView.backgroundColor = [UIColor whiteColor];
+        self.pView.delegate = self;
+        self.pView.dataSource = self;
+        [_backView addSubview:self.pView];
+    }else if (_tempType == 2){
+        self.dataView = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, kViewHeight / 5, kViewWidth, kViewHeight/5 * 3)];
+        self.dataView.backgroundColor = [UIColor whiteColor];
+        [_backView addSubview:self.dataView];
+        //时间模式
+        [_dataView setDatePickerMode:(kDatePickerMode)];
+        //默认根据手机本地设置显示为中文还是其他语言
+        NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"];//设置为中文显示
+        _dataView.locale = locale;
+    }
     
     UIButton * sureBtn = [[UIButton alloc] initWithFrame:CGRectMake(0,kViewHeight / 5 * 4, kViewWidth/2 - 0.1, kViewHeight/5)];
     [sureBtn setTitle:@"确认" forState:(UIControlStateNormal)];
@@ -151,18 +179,33 @@
 - (void)sureBtnAction:(UIButton *)sender
 {
     [self dissmiss];
-    
+    NSString * str = [self returnSelectedStr];
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(pickViewSureBtnSelectData:)])
     {
-        NSString * str;
-        if (_tempType == 0) {
-            NSInteger num = [self.pView selectedRowInComponent:0];
-            str = _temData[num];
-        }else if (_tempType == 1){
-            str = [NSString stringWithFormat:@"%@,%@,%@",_provinceArr[_provinceIndex],_cityArr[_cityIndex],_districtArr[_districtIndex]];
-        }
+        //pickerView&&DatePickerView返回选择的数据
         [self.delegate pickViewSureBtnSelectData:str];
     }
+    if (self.dateBlock) {
+        self.dateBlock(str);
+    }
+}
+
+//pickerView&&DatePickerView返回选择的数据
+- (NSString *)returnSelectedStr
+{
+    NSString * str;
+    if (_tempType == 0) {
+        NSInteger num = [self.pView selectedRowInComponent:0];
+        str = _temData[num];
+    }else if (_tempType == 1){
+        str = [NSString stringWithFormat:@"%@,%@,%@",_provinceArr[_provinceIndex],_cityArr[_cityIndex],_districtArr[_districtIndex]];
+    }else if (_tempType == 2){
+        NSDate *thedate=self.dataView.date;
+        NSDateFormatter *dateforMatter=[[NSDateFormatter alloc]init];
+        [dateforMatter setDateFormat:kDateFormat];
+        str = [dateforMatter stringFromDate:thedate];
+    }
+    return str;
 }
 
 - (void)cancelBtnAction:(UIButton *)sender

@@ -13,6 +13,7 @@
 {
     GWPickerView * picker;
 }
+@property (nonatomic,strong) UILabel * label;
 @end
 
 @implementation ViewController
@@ -20,9 +21,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor lightTextColor];
-    NSArray * arr = @[@"sanmao",@"ermao",@"ergou"];
-    picker = [[GWPickerView alloc] initWithData:nil title:@"3344" type:(GWPickerViewTypeAddress)] ;
+    _label = [[UILabel alloc] initWithFrame:CGRectMake(0, 90, 200, 50)];
+    [self.view addSubview:_label];
+
+    picker = [[GWPickerView alloc] initWithData:@[@"jjj",@"lll",@"iii"] title:@"3344" type:(GWPickerViewTypeAddress)] ;
     picker.delegate = self;
+    
+    __weak typeof (self) weakSelf = self;
+    picker.dateBlock = ^(NSString * data){
+        weakSelf.label.text = data;
+    };
 }
 
 - (void)pickViewSureBtnSelectData:(NSString *)data

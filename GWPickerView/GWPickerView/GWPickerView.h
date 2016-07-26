@@ -9,12 +9,21 @@
 #import <UIKit/UIKit.h>
 
 typedef enum : NSUInteger {
+    /**
+     *  简单选择器，就必须传data;
+     */
     GWPickerViewTypeSimple,
     /**
-     *  如果是地址类型，就不用传data;
+     *  地址选择器，就不用传data;
      */
     GWPickerViewTypeAddress,
+    /**
+     *  时间选择器，就不用传data;
+     */
+    GWPickerViewTypeTime,
 } GWPickerViewType;
+
+typedef void (^SelectedBlock) (NSString *dateStr);
 
 @protocol GWPickerViewDelegate <NSObject>
 
@@ -30,5 +39,6 @@ GWPickerViewDelegate> delegate;
 - (instancetype)initWithData:(NSArray *)data title:(NSString *)title type:(GWPickerViewType)type;
 - (void)show;
 - (void)dissmiss;
+@property (nonatomic,copy) SelectedBlock dateBlock;
 
 @end
