@@ -169,7 +169,7 @@
     _window = [UIApplication sharedApplication].keyWindow;
     [_window addSubview:self];
     [UIView animateWithDuration:0.5 animations:^{
-        _backView.alpha = 0.8;
+        _backView.alpha = 1;
     }];
 }
 
