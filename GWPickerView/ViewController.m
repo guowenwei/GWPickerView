@@ -24,7 +24,7 @@
     _label = [[UILabel alloc] initWithFrame:CGRectMake(0, 90, 200, 50)];
     [self.view addSubview:_label];
 
-    picker = [[GWPickerView alloc] initWithData:@[@"jjj",@"lll",@"iii"] title:@"3344" type:(GWPickerViewTypeAddress)] ;
+    picker = [[GWPickerView alloc] initWithData:@[@"jjj",@"lll",@"iii"] title:@"3344" type:(GWPickerViewTypeAddress) color:nil] ;
     picker.delegate = self;
     
     __weak typeof (self) weakSelf = self;

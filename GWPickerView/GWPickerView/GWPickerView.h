@@ -36,7 +36,7 @@ typedef void (^SelectedBlock) (NSString *dateStr);
 @property (nonatomic,assign) id<
 GWPickerViewDelegate> delegate;
 
-- (instancetype)initWithData:(NSArray *)data title:(NSString *)title type:(GWPickerViewType)type;
+- (instancetype)initWithData:(NSArray *)data title:(NSString *)title type:(GWPickerViewType)type color:(UIColor *)color;
 - (void)show;
 - (void)dissmiss;
 @property (nonatomic,copy) SelectedBlock dateBlock;

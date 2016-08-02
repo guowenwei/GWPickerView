@@ -38,6 +38,7 @@
     NSString * _tempTitle;//选择器的标题
     UIView * _backView;//底部视图
     NSInteger _tempType;
+    UIColor * _tempColor;
     /**
      *  TypeAddress
      */
@@ -62,12 +63,17 @@
 
 @implementation GWPickerView
 
-- (instancetype)initWithData:(NSArray *)data title:(NSString *)title type:(GWPickerViewType)type;
+- (instancetype)initWithData:(NSArray *)data title:(NSString *)title type:(GWPickerViewType)type color:(UIColor *)color
 {
     if (self == [super initWithFrame:[UIScreen mainScreen].bounds]) {
         self.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight);
         _tempTitle = title;
         _tempType = type;
+        if (color != nil) {
+            _tempColor = color;
+        } else {
+            _tempColor = kPickViewColor;
+        }
         [self addView];
         if (type == 0) {
             _temData = data;
@@ -87,7 +93,7 @@
     _backView.layer.cornerRadius = 10;
     _backView.layer.masksToBounds = YES;
     _backView.alpha = 0;
-    _backView.backgroundColor = kPickViewColor;
+    _backView.backgroundColor = _tempColor;
     _backView.layer.borderWidth = 1;
     _backView.layer.borderColor = [[UIColor whiteColor] CGColor];
     [self addSubview:_backView];
