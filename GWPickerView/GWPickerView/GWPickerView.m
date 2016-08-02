@@ -94,7 +94,7 @@
     _backView.layer.masksToBounds = YES;
     _backView.alpha = 0;
     _backView.backgroundColor = _tempColor;
-    _backView.layer.borderWidth = 1;
+    _backView.layer.borderWidth = 2;
     _backView.layer.borderColor = [[UIColor whiteColor] CGColor];
     [self addSubview:_backView];
     
@@ -252,7 +252,11 @@
     UILabel* pickerLabel = [UILabel new];
     pickerLabel.numberOfLines = 0;
     pickerLabel.textAlignment = NSTextAlignmentCenter;
-    [pickerLabel setFont:[UIFont boldSystemFontOfSize:12]];
+    if (_tempType == 0) {
+        [pickerLabel setFont:[UIFont boldSystemFontOfSize:17]];
+    } else {
+        [pickerLabel setFont:[UIFont boldSystemFontOfSize:12]];
+    }
     pickerLabel.text=[self pickerView:pickerView titleForRow:row forComponent:component];
     return pickerLabel;
 }
